@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1011846783410",
+    "firebase_url": "https://caf-n-tracker.firebaseio.com",
+    "project_id": "caf-n-tracker",
+    "storage_bucket": "caf-n-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011846783410:android:7a221e36f709e65e",
+        "android_client_info": {
+          "package_name": "com.grarak.cafntracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011846783410-9rj86047ef7eg83q7ddtte0pm9vnetq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAvU8unK71hI5WKEYxgA1n6__vcOt_p4k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
