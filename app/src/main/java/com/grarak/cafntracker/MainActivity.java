@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
 
                 try {
                     SSLSocketFactory ssf = sc.getSocketFactory();
-                    SSLSocket socket = (SSLSocket) ssf.createSocket("10.0.0.14", 5000);
+                    SSLSocket socket = (SSLSocket) ssf.createSocket("10.0.0.4", 5000);
                     socket.startHandshake();
 
                     DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
@@ -184,45 +184,69 @@ public class MainActivity extends Activity {
 
                 category.addPreference(switchCompat);
 
-                Preference filter = new Preference(getActivity());
-                filter.setTitle("Filter (leave blank to receive all)");
+                Preference filterSummary = new Preference(getActivity());
+                filterSummary.setSummary("Filters: Leave blank to receive all. Case-sensitive!");
+
+                category.addPreference(filterSummary);
+
+                final Preference filter = new Preference(getActivity());
+                filter.setTitle("Filter " + mRepos.get(name));
                 filter.setSummary(PreferenceManager.getDefaultSharedPreferences(getActivity())
                         .getString(name + "_filter", ""));
                 filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(final Preference preference) {
-                        FrameLayout frameLayout = new FrameLayout(getActivity());
-                        int padding = Math.round(getResources().getDisplayMetrics().density * 30);
-                        frameLayout.setPadding(padding, padding, padding, padding);
-
-                        final EditText editText = new EditText(getActivity());
-                        editText.setHint(mRepos.get(name));
-                        editText.setMaxLines(1);
-                        editText.setLayoutParams(new ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT));
-                        frameLayout.addView(editText);
-
-                        new AlertDialog.Builder(getActivity()).setView(frameLayout)
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                    }
-                                }).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                preference.setSummary(editText.getText());
-                                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                                        .putString(name + "_filter", editText.getText().toString()).apply();
-                            }
-                        }).show();
+                        showDialog(filter, mRepos.get(name), filter.getSummary().toString(), name + "_filter");
                         return true;
                     }
                 });
 
                 category.addPreference(filter);
+
+                final Preference filterTag = new Preference(getActivity());
+                filterTag.setTitle("Filter Tag");
+                filterTag.setSummary(PreferenceManager.getDefaultSharedPreferences(getActivity())
+                        .getString(name + "_filtertag", ""));
+                filterTag.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(final Preference preference) {
+                        showDialog(filterTag, "Tag", filterTag.getSummary().toString(), name + "_filtertag");
+                        return true;
+                    }
+                });
+
+                category.addPreference(filterTag);
             }
             setPreferenceScreen(preferenceScreen);
+        }
+
+        private void showDialog(final Preference preference, String hint, String text, final String prefName) {
+            FrameLayout frameLayout = new FrameLayout(getActivity());
+            int padding = Math.round(getResources().getDisplayMetrics().density * 30);
+            frameLayout.setPadding(padding, padding, padding, padding);
+
+            final EditText editText = new EditText(getActivity());
+            editText.setHint(hint);
+            editText.setText(text);
+            editText.setMaxLines(1);
+            editText.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            frameLayout.addView(editText);
+
+            new AlertDialog.Builder(getActivity()).setView(frameLayout)
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    }).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    preference.setSummary(editText.getText());
+                    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
+                            .putString(prefName, editText.getText().toString()).apply();
+                }
+            }).show();
         }
     }
 

@@ -45,11 +45,10 @@ public class MessagingServer extends FirebaseMessagingService {
             return;
         }
 
-        String filter;
-        if (!(filter = PreferenceManager.getDefaultSharedPreferences(this).getString(name + "_filter", "")).isEmpty()) {
-            if (!title.contains(filter)) {
-                return;
-            }
+        String filter = PreferenceManager.getDefaultSharedPreferences(this).getString(name + "_filter", "");
+        String filtertag = PreferenceManager.getDefaultSharedPreferences(this).getString(name + "_filtertag", "");
+        if ((!filter.isEmpty() && !title.contains(filter)) || (!filtertag.isEmpty() && !message.contains(filtertag))) {
+            return;
         }
 
         Intent i = new Intent(Intent.ACTION_VIEW);
@@ -60,7 +59,7 @@ public class MessagingServer extends FirebaseMessagingService {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(name + ": " + title)
+                        .setContentTitle(title.isEmpty() ? name : name + ": " + title)
                         .setContentText(message)
                         .setContentIntent(pendingIntent)
                         .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
