@@ -189,19 +189,21 @@ public class MainActivity extends Activity {
 
                 category.addPreference(filterSummary);
 
-                final Preference filter = new Preference(getActivity());
-                filter.setTitle("Filter " + mRepos.get(name));
-                filter.setSummary(PreferenceManager.getDefaultSharedPreferences(getActivity())
-                        .getString(name + "_filter", ""));
-                filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(final Preference preference) {
-                        showDialog(filter, mRepos.get(name), filter.getSummary().toString(), name + "_filter");
-                        return true;
-                    }
-                });
+                if (!mRepos.get(name).isEmpty()) {
+                    final Preference filter = new Preference(getActivity());
+                    filter.setTitle("Filter " + mRepos.get(name));
+                    filter.setSummary(PreferenceManager.getDefaultSharedPreferences(getActivity())
+                            .getString(name + "_filter", ""));
+                    filter.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(final Preference preference) {
+                            showDialog(filter, mRepos.get(name), filter.getSummary().toString(), name + "_filter");
+                            return true;
+                        }
+                    });
 
-                category.addPreference(filter);
+                    category.addPreference(filter);
+                }
 
                 final Preference filterTag = new Preference(getActivity());
                 filterTag.setTitle("Filter Tag");
